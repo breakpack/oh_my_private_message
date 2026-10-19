@@ -20,7 +20,7 @@ npm test
 docker compose up --build -d
 ```
 
-Compose는 기존 `npm_default` Docker 네트워크에 릴레이를 연결하고 호스트 포트는 열지 않습니다. Nginx Proxy Manager에서 WebSocket 지원을 켜고, upstream scheme `http`, hostname `privatecat-relay`, port `8080`으로 Proxy Host를 설정합니다. Cloudflare Tunnel에서 사용할 공개 hostname을 NPM의 80 포트로 연결한 뒤, 앱에는 `wss://<공개 hostname>`을 입력합니다. WebSocket 경로는 `/relay`입니다. NPM 네트워크 이름이 다르면 `NPM_DOCKER_NETWORK`로 지정할 수 있습니다.
+Compose는 기존 `npm_default` Docker 네트워크에 릴레이를 연결하고 호스트 포트는 열지 않습니다. Nginx Proxy Manager에서 WebSocket 지원을 켜고, upstream scheme `http`, hostname `privatecat-relay`, port `8080`으로 Proxy Host를 설정합니다. Cloudflare Tunnel에서 사용할 공개 hostname을 NPM의 80 포트로 연결한 뒤, 앱에는 `wss://<공개 hostname>`을 입력합니다. WebSocket 경로는 `/relay`입니다. 이 저장소와 함께 배포된 서버 주소는 `wss://privatecat.breakpack.cc`입니다. NPM 네트워크 이름이 다르면 `NPM_DOCKER_NETWORK`로 지정할 수 있습니다.
 
 릴레이에는 DB, 계정, 메시지·파일 저장소, 오프라인 대기열이 없습니다. 오프라인 메시지는 발신 기기의 로컬 대기열에 남고 상대가 다시 연결되면 재전송합니다.
 
