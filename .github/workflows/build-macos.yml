@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build unsigned app
-        run: xcodebuild -project MacApp/PrivateCat.xcodeproj -target PrivateCat -configuration Release -destination 'generic/platform=macOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+        run: xcodebuild -project MacApp/PrivateCat.xcodeproj -scheme PrivateCat -configuration Release -destination 'generic/platform=macOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
       - name: Package app
         run: ditto -c -k --sequesterRsrc --keepParent build/Build/Products/Release/PrivateCat.app PrivateCat-macOS.zip
       - uses: actions/upload-artifact@v4
