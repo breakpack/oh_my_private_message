@@ -1,0 +1,6 @@
+{
+  "images" : [
+    { "filename" : "cat02_idle_8fps.gif", "idiom" : "universal" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

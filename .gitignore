@@ -1,0 +1,7 @@
+.DS_Store
+.omx/
+catset_assets/
+DerivedData/
+build/
+Relay/node_modules/
+MacApp/PrivateCat.xcodeproj/xcuserdata/
