@@ -399,7 +399,7 @@ struct Bubble: Identifiable {
         let key = "incoming-\(chunk.transferID.uuidString)"
         guard chunk.count > 0, chunk.count <= 16, chunk.index >= 0, chunk.index < chunk.count,
               chunk.data.count <= 512 * 1_024 else { return }
-        var state = (try? context.fetch(FetchDescriptor<IncomingTransfer>(predicate: #Predicate { $0.id == key }))).first
+        var state = (try? context.fetch(FetchDescriptor<IncomingTransfer>(predicate: #Predicate { $0.id == key })))?.first
         if state == nil {
             state = IncomingTransfer(id: key, peerID: senderID, name: chunk.name, count: chunk.count,
                                      sha256: chunk.sha256, chunks: Data())
