@@ -107,7 +107,8 @@ import SwiftUI
 
     private func makeMenuBarItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.title = "🐱"
+        statusItem.button?.image = menuBarCatImage()
+        statusItem.button?.image?.isTemplate = true
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "대화 열기", action: #selector(openChat), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "설정…", action: #selector(openSettings), keyEquivalent: ","))
@@ -127,9 +128,41 @@ import SwiftUI
         panel.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
         panel.isMovableByWindowBackground = true
         panel.contentView = NSHostingView(rootView: CatView(model: model))
-        panel.setFrameOrigin(NSPoint(x: (NSScreen.main?.visibleFrame.maxX ?? 600) - 140, y: 100))
-        panel.orderFrontRegardless()
+        let visibleFrame = (NSScreen.main ?? NSScreen.screens.first)?.visibleFrame
+            ?? NSRect(x: 0, y: 0, width: 800, height: 600)
+        panel.setFrameOrigin(NSPoint(x: visibleFrame.maxX - 140, y: visibleFrame.minY + 80))
         catPanel = panel
+        DispatchQueue.main.async { [weak panel] in panel?.orderFrontRegardless() }
+    }
+
+    private func menuBarCatImage() -> NSImage {
+        NSImage(size: NSSize(width: 22, height: 22), flipped: false) { rect in
+            let head = NSBezierPath()
+            head.move(to: NSPoint(x: 2, y: 19))
+            head.line(to: NSPoint(x: 4, y: 7))
+            head.line(to: NSPoint(x: 9, y: 10))
+            head.curve(to: NSPoint(x: 13, y: 10), controlPoint1: NSPoint(x: 10, y: 9), controlPoint2: NSPoint(x: 12, y: 9))
+            head.line(to: NSPoint(x: 18, y: 7))
+            head.line(to: NSPoint(x: 20, y: 19))
+            head.curve(to: NSPoint(x: 2, y: 19), controlPoint1: NSPoint(x: 16, y: 14), controlPoint2: NSPoint(x: 6, y: 14))
+            head.close()
+            NSColor.black.setFill()
+            head.fill()
+
+            guard let context = NSGraphicsContext.current else { return true }
+            context.saveGraphicsState()
+            context.compositingOperation = .clear
+            NSBezierPath(ovalIn: NSRect(x: 7, y: 9, width: 2, height: 2.5)).fill()
+            NSBezierPath(ovalIn: NSRect(x: 13, y: 9, width: 2, height: 2.5)).fill()
+            let nose = NSBezierPath()
+            nose.move(to: NSPoint(x: 10, y: 7.5))
+            nose.line(to: NSPoint(x: 12, y: 7.5))
+            nose.line(to: NSPoint(x: 11, y: 6))
+            nose.close()
+            nose.fill()
+            context.restoreGraphicsState()
+            return true
+        }
     }
 
     @objc private func openChat() { showChat() }
