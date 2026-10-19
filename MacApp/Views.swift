@@ -167,6 +167,9 @@ struct SettingsView: View {
     @ObservedObject var model: MessengerModel
     @State private var inviteImage: NSImage?
     @State private var shortcutKey = UserDefaults.standard.integer(forKey: "hotkeyCode") == 0 ? 46 : UserDefaults.standard.integer(forKey: "hotkeyCode")
+    @State private var shortcutLabel = UserDefaults.standard.string(forKey: "hotkeyLabel") ?? "M"
+    @State private var isRecordingShortcut = false
+    @State private var shortcutMonitor: Any?
 
     var body: some View {
         Form {
@@ -180,6 +183,10 @@ struct SettingsView: View {
         .onChange(of: model.catStyle) { _, _ in model.persistSettings() }
         .onChange(of: model.bubbleDuration) { _, _ in model.persistSettings() }
         .onAppear { inviteImage = qrImage(for: model.identity.invitationCode) }
+        .onChange(of: isRecordingShortcut) { _, recording in
+            if recording { startShortcutCapture() } else { stopShortcutCapture() }
+        }
+        .onDisappear { stopShortcutCapture() }
     }
 
     @ViewBuilder private var connectionRows: some View {
@@ -241,13 +248,45 @@ struct SettingsView: View {
             TextField("받을 파일 위치", text: $model.downloadFolder)
             HStack {
                 Text("전역 단축키")
-                Text("⌥⇧ + 키 코드")
-                TextField("키 코드", value: $shortcutKey, format: .number).frame(width: 70)
-                    .onChange(of: shortcutKey) { _, value in
-                        UserDefaults.standard.set(value, forKey: "hotkeyCode")
-                        AppDelegate.shared?.registerHotKey(keyCode: UInt32(value))
-                    }
+                Spacer()
+                Text("현재: ⌥⇧\(shortcutLabel)").foregroundStyle(.secondary)
+                Button(isRecordingShortcut ? "⌥⇧ 키를 누르세요…" : "단축키 설정") {
+                    isRecordingShortcut = true
+                }
             }
+            if isRecordingShortcut {
+                Text("⌥⇧를 누른 채 원하는 키를 입력하세요. Esc를 누르면 취소됩니다.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+    }
+
+    private func startShortcutCapture() {
+        stopShortcutCapture()
+        shortcutMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            if event.keyCode == 53 {
+                isRecordingShortcut = false
+                return nil
+            }
+
+            let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            guard modifiers.contains([.option, .shift]),
+                  !modifiers.contains([.command, .control]) else { return nil }
+
+            shortcutKey = Int(event.keyCode)
+            shortcutLabel = event.charactersIgnoringModifiers?.uppercased() ?? "Key \(event.keyCode)"
+            UserDefaults.standard.set(shortcutKey, forKey: "hotkeyCode")
+            UserDefaults.standard.set(shortcutLabel, forKey: "hotkeyLabel")
+            AppDelegate.shared?.registerHotKey(keyCode: UInt32(event.keyCode))
+            isRecordingShortcut = false
+            return nil
+        }
+    }
+
+    private func stopShortcutCapture() {
+        if let shortcutMonitor {
+            NSEvent.removeMonitor(shortcutMonitor)
+            self.shortcutMonitor = nil
+        }
     }
 
     private func qrImage(for value: String) -> NSImage? {
