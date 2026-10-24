@@ -4,6 +4,6 @@
   "private": true,
   "description": "Stateless WebSocket relay for encrypted Private Chat frames",
   "engines": { "node": ">=22" },
-  "scripts": { "start": "node server.js", "test": "node --test" },
+  "scripts": { "start": "node server.js", "test": "node --test test/*.js" },
   "dependencies": { "ws": "^8.18.3" }
 }

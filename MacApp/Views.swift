@@ -166,6 +166,7 @@ struct ComposerView: View {
 struct SettingsView: View {
     @ObservedObject var model: MessengerModel
     @State private var inviteImage: NSImage?
+    @State private var invitationName = "친구"
     @State private var shortcutKey = UserDefaults.standard.integer(forKey: "hotkeyCode") == 0 ? 46 : UserDefaults.standard.integer(forKey: "hotkeyCode")
     @State private var shortcutLabel = UserDefaults.standard.string(forKey: "hotkeyLabel") ?? "M"
     @State private var isRecordingShortcut = false
@@ -229,8 +230,9 @@ struct SettingsView: View {
             }
             if let inviteImage { Image(nsImage: inviteImage).interpolation(.none).resizable().frame(width: 112, height: 112) }
             TextField("상대 초대 코드 붙여넣기", text: $model.invitationInput)
+            TextField("상대 이름", text: $invitationName)
             HStack {
-                Button("상대 추가") { model.acceptInvitation() }
+                Button("상대 추가") { model.acceptInvitation(name: invitationName.isEmpty ? "친구" : invitationName) }
                 Text(model.invitationStatus).font(.caption).foregroundStyle(.secondary)
             }
     }

@@ -14,8 +14,25 @@ services:
       npm:
         aliases:
           - privatecat-relay
+  test-peer:
+    build:
+      context: .
+      dockerfile: Dockerfile.test-peer
+    restart: unless-stopped
+    depends_on:
+      - relay
+    environment:
+      PRIVATECAT_RELAY_URL: ws://privatecat-relay:8080/relay
+      PRIVATECAT_TEST_PEER_DATA_DIR: /data
+    volumes:
+      - privatecat_test_peer_data:/data
+    networks:
+      - npm
 
 networks:
   npm:
     external: true
     name: ${NPM_DOCKER_NETWORK:-npm_default}
+
+volumes:
+  privatecat_test_peer_data:

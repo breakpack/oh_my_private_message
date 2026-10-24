@@ -1,0 +1,14 @@
+{
+  "aliceAgreementPublic": "zo060cy2M-x7cMF4FKXHbs0CloUFDTRHRboFhw5YfVk",
+  "aliceID": "NHUPmL1Z_PyUbaRaqr6TO-FUpLUJThxKv0KGZQXzyX4",
+  "aliceSigningPublic": "iojj3XQJ8ZX9UtstPLpdcspnCb8dlBIb83SIAbQPb1w",
+  "botAgreementPrivate": "BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ",
+  "botAgreementPublic": "rAGyIJ6GNU-4UyN7XeD0-rE8f8v0M6YcAZNpYX_s8Qs",
+  "botID": "ti6Gf6LzOv5i1daxZC4WIdVDMHhGsqV7iX5xCRm3Zwk",
+  "botSigningPublic": "7UkoxijRwsbq6QM4kFmVYSlZJzpcY_k2NsFGFKyHN9E",
+  "ciphertextFromAlice": "ERERERERERERERERP-eDwn8o6W4P2sZfw7TcKjPi3kkJXeliGFzsrhK0aevVX9zuWhJ2UArrC0CwJaHJ2CPPnPjuhyX1ct4ZKTM",
+  "expectedBotReply": "IiIiIiIiIiIiIiIi6jxR7kpDQ6SaisH04RDdFRxZRBQARsGB6TZR8Z2l5T8RuM-Jv_TgOhjB7KDVOsjsjghy",
+  "nonceFromBot": "IiIiIiIiIiIiIiIi",
+  "payload": "{\"kind\":\"text\",\"text\":\"hello from PrivateCat\"}",
+  "replyPayload": "{\"kind\":\"text\",\"text\":\"hello back\"}"
+}
